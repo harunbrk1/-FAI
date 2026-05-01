@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ŞİFAİ — Sağlığın Akıllı Dostu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF8F4;
+    --warm-white: #FFFFFF;
+    --mint: #4CAF87;
+    --mint-light: #E8F5EF;
+    --mint-mid: #A8D5BE;
+    --sky: #5B9BD5;
+    --sky-light: #EBF4FC;
+    --teal: #3AAFA9;
+    --teal-light: #E0F4F3;
+    --bej: #F5EFE6;
+    --text-dark: #1A2332;
+    --text-mid: #4A5568;
+    --text-soft: #8A97A8;
+    --border: #E8EDF3;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; }
+
+/* ── NAV ── */
+nav {
+position: fixed; top: 0; width: 100%; z-index: 200;
+background: rgba(250,248,244,0.92); backdrop-filter: blur(16px);
+border-bottom: 1px solid var(–border);
+padding: 0 5%; display: flex; align-items: center; justify-content: space-between;
+height: 68px;
+}
+.logo { font-family: ‘Playfair Display’, serif; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; cursor: pointer; }
+.logo span { color: var(–mint); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { text-decoration: none; color: var(–text-mid); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(–mint); }
+.nav-cta {
+background: var(–mint); color: white; border: none;
+padding: 0.6rem 1.4rem; border-radius: 50px;
+font-size: 0.9rem; font-weight: 600; cursor: pointer;
+transition: all 0.2s; font-family: ‘DM Sans’, sans-serif;
+}
+.nav-cta:hover { background: #3d9e72; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(76,175,135,0.3); }
+
+/* ── SETUP OVERLAY ── */
+.setup-overlay {
+position: fixed; inset: 0; z-index: 500;
+background: rgba(250,248,244,0.96); backdrop-filter: blur(8px);
+display: none; align-items: center; justify-content: center;
+}
+.setup-overlay.active { display: flex; }
+.setup-box {
+background: white; border-radius: 24px; padding: 2.5rem;
+width: 90%; max-width: 420px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+border: 1px solid var(–border); text-align: center;
+}
+.setup-icon { font-size: 3rem; margin-bottom: 1rem; }
+.setup-title { font-family: ‘Playfair Display’, serif; font-size: 1.6rem; margin-bottom: 0.5rem; }
+.setup-desc { color: var(–text-mid); font-size: 0.88rem; margin-bottom: 1.5rem; line-height: 1.6; }
+.setup-input {
+width: 100%; padding: 0.85rem 1rem;
+border: 2px solid var(–border); border-radius: 12px;
+font-size: 0.9rem; font-family: ‘DM Sans’, sans-serif;
+outline: none; margin-bottom: 0.8rem; transition: border-color 0.2s;
+}
+.setup-input:focus { border-color: var(–mint); }
+.setup-btn {
+width: 100%; padding: 0.9rem;
+background: linear-gradient(135deg, var(–mint), var(–teal));
+color: white; border: none; border-radius: 12px;
+font-size: 0.95rem; font-weight: 600; cursor: pointer;
+font-family: ‘DM Sans’, sans-serif; transition: all 0.2s;
+}
+.setup-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(76,175,135,0.3); }
+.setup-note { font-size: 0.75rem; color: var(–text-soft); margin-top: 1rem; }
+.setup-note a { color: var(–mint); text-decoration: none; }
+.setup-close {
+position: absolute; top: 1rem; right: 1rem;
+background: none; border: none; font-size: 1.4rem;
+cursor: pointer; color: var(–text-soft);
+}
+
+/* ── CHAT OVERLAY ── */
+.chat-overlay {
+position: fixed; inset: 0; z-index: 300;
+background: var(–cream);
+display: none; flex-direction: column;
+}
+.chat-overlay.active { display: flex; }
+
+.chat-nav {
+background: white; border-bottom: 1px solid var(–border);
+padding: 0 5%; height: 64px;
+display: flex; align-items: center; justify-content: space-between;
+flex-shrink: 0;
+}
+.chat-nav-left { display: flex; align-items: center; gap: 1rem; }
+.back-btn {
+background: none; border: 1px solid var(–border);
+padding: 0.4rem 0.9rem; border-radius: 50px;
+cursor: pointer; font-size: 0.82rem; color: var(–text-mid);
+font-family: ‘DM Sans’, sans-serif; transition: all 0.2s;
+}
+.back-btn:hover { border-color: var(–mint); color: var(–mint); }
+.chat-logo { font-family: ‘Playfair Display’, serif; font-size: 1.3rem; font-weight: 700; }
+.chat-logo span { color: var(–mint); }
+.key-btn {
+background: none; border: 1px solid var(–border);
+padding: 0.35rem 0.8rem; border-radius: 50px;
+cursor: pointer; font-size: 0.78rem; color: var(–text-soft);
+font-family: ‘DM Sans’, sans-serif; transition: all 0.2s;
+}
+.key-btn:hover { border-color: var(–mint); color: var(–mint); }
+
+/* MODULE TABS */
+.mod-tabs {
+background: white; border-bottom: 1px solid var(–border);
+padding: 0 3%; display: flex; overflow-x: auto;
+scrollbar-width: none; flex-shrink: 0;
+}
+.mod-tabs::-webkit-scrollbar { display: none; }
+.mtab {
+padding: 0.85rem 1rem; border: none; background: none;
+font-family: ‘DM Sans’, sans-serif; font-size: 0.82rem;
+color: var(–text-soft); cursor: pointer; white-space: nowrap;
+border-bottom: 2px solid transparent; transition: all 0.2s; font-weight: 500;
+}
+.mtab:hover { color: var(–text-dark); }
+.mtab.active { color: var(–mint); border-bottom-color: var(–mint); font-weight: 600; }
+
+/* CHAT BODY */
+.chat-body { flex: 1; overflow-y: auto; padding: 1.2rem 5% 0; }
+.chat-inner { max-width: 720px; margin: 0 auto; }
+
+.disclaimer-bar {
+background: #FFF8E8; border: 1px solid #F0D080;
+border-radius: 10px; padding: 0.55rem 1rem;
+font-size: 0.74rem; color: #8A6914;
+margin-bottom: 1rem; text-align: center;
+}
+
+.mod-header {
+background: white; border-radius: 14px;
+padding: 1rem 1.3rem; margin-bottom: 1rem;
+border: 1px solid var(–border);
+display: flex; align-items: center; gap: 0.9rem;
+}
+.mod-icon {
+width: 44px; height: 44px; border-radius: 12px;
+display: flex; align-items: center; justify-content: center;
+font-size: 1.3rem; flex-shrink: 0;
+}
+.ig { background: var(–mint-light); }
+.ib { background: var(–sky-light); }
+.it { background: var(–teal-light); }
+.ibj { background: var(–bej); }
+.mod-info h3 { font-size: 0.95rem; font-weight: 600; }
+.mod-info p { font-size: 0.78rem; color: var(–text-soft); }
+
+.quick-prompts { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1rem; }
+.qbtn {
+background: white; border: 1.5px solid var(–border);
+border-radius: 50px; padding: 0.35rem 0.85rem;
+font-size: 0.78rem; cursor: pointer; color: var(–text-mid);
+font-family: ‘DM Sans’, sans-serif; transition: all 0.2s; font-weight: 500;
+}
+.qbtn:hover { border-color: var(–mint); color: var(–mint); background: var(–mint-light); }
+
+.messages { display: flex; flex-direction: column; gap: 0.9rem; padding-bottom: 1rem; }
+
+.msg-wrap { display: flex; flex-direction: column; }
+.msg-wrap.user { align-items: flex-end; }
+.msg-wrap.ai { align-items: flex-start; }
+.msg-bubble {
+max-width: 80%; padding: 0.9rem 1.1rem;
+border-radius: 18px; font-size: 0.88rem; line-height: 1.65;
+}
+.msg-bubble.user {
+background: linear-gradient(135deg, var(–mint), var(–teal));
+color: white; border-radius: 18px 18px 4px 18px;
+}
+.msg-bubble.ai {
+background: white; color: var(–text-dark);
+border: 1px solid var(–border); border-radius: 18px 18px 18px 4px;
+}
+.msg-time { font-size: 0.68rem; color: var(–text-soft); margin-top: 0.25rem; padding: 0 0.3rem; }
+
+.typing-wrap { display: flex; }
+.typing-bubble {
+background: white; border: 1px solid var(–border);
+border-radius: 18px 18px 18px 4px;
+padding: 0.9rem 1.1rem;
+display: flex; gap: 0.35rem; align-items: center;
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(–mint); animation: bounce 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: 0.15s; }
+.dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes bounce {
+0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+30% { transform: translateY(-5px); opacity: 1; }
+}
+
+.welcome-box { text-align: center; padding: 2.5rem 1rem; }
+.welcome-emoji { font-size: 3rem; margin-bottom: 0.8rem; }
+.welcome-title { font-family: ‘Playfair Display’, serif; font-size: 1.4rem; margin-bottom: 0.5rem; }
+.welcome-desc { color: var(–text-mid); font-size: 0.87rem; line-height: 1.7; max-width: 380px; margin: 0 auto; }
+
+.error-bubble {
+background: #FEE2E2; border: 1px solid #FECACA;
+border-radius: 12px; padding: 0.8rem 1rem;
+font-size: 0.82rem; color: #DC2626;
+}
+
+/* CHAT INPUT */
+.chat-input-bar {
+background: rgba(250,248,244,0.97); backdrop-filter: blur(12px);
+border-top: 1px solid var(–border); padding: 0.9rem 5%;
+flex-shrink: 0;
+}
+.input-wrap { max-width: 720px; margin: 0 auto; display: flex; gap: 0.7rem; align-items: flex-end; }
+.input-box {
+flex: 1; background: white; border: 2px solid var(–border);
+border-radius: 14px; padding: 0.7rem 1rem;
+font-size: 0.88rem; font-family: ‘DM Sans’, sans-serif;
+outline: none; resize: none; min-height: 42px; max-height: 110px;
+transition: border-color 0.2s; line-height: 1.5;
+}
+.input-box:focus { border-color: var(–mint); }
+.send-btn {
+background: linear-gradient(135deg, var(–mint), var(–teal));
+color: white; border: none; width: 42px; height: 42px;
+border-radius: 12px; cursor: pointer; font-size: 1rem;
+display: flex; align-items: center; justify-content: center;
+transition: all 0.2s; flex-shrink: 0;
+}
+.send-btn:hover { transform: scale(1.05); box-shadow: 0 4px 14px rgba(76,175,135,0.35); }
+.send-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ══════════════════════════════════════
+LANDING PAGE (original design below)
+══════════════════════════════════════ */
+
+/* HERO */
+.hero {
+min-height: 100vh; display: flex; align-items: center;
+padding: 100px 5% 60px; position: relative; overflow: hidden;
+}
+.hero-bg {
+position: absolute; inset: 0; z-index: 0;
+background:
+radial-gradient(ellipse 60% 50% at 80% 40%, rgba(76,175,135,0.12) 0%, transparent 60%),
+radial-gradient(ellipse 40% 40% at 20% 70%, rgba(91,155,213,0.10) 0%, transparent 60%),
+radial-gradient(ellipse 30% 30% at 60% 80%, rgba(58,175,169,0.08) 0%, transparent 50%);
+}
+.hero-blob {
+position: absolute; right: -5%; top: 10%;
+width: 55%; height: 80%;
+background: linear-gradient(135deg, var(–mint-light) 0%, var(–sky-light) 50%, var(–teal-light) 100%);
+border-radius: 40% 60% 55% 45% / 45% 40% 60% 55%;
+opacity: 0.6; animation: blobMorph 8s ease-in-out infinite;
+}
+@keyframes blobMorph {
+0%,100% { border-radius: 40% 60% 55% 45% / 45% 40% 60% 55%; }
+33% { border-radius: 55% 45% 40% 60% / 60% 55% 45% 40%; }
+66% { border-radius: 45% 55% 60% 40% / 40% 60% 55% 45%; }
+}
+.hero-content { position: relative; z-index: 1; max-width: 580px; }
+.hero-badge {
+display: inline-flex; align-items: center; gap: 0.4rem;
+background: var(–mint-light); color: var(–mint);
+padding: 0.4rem 1rem; border-radius: 50px;
+font-size: 0.82rem; font-weight: 600; margin-bottom: 1.5rem;
+border: 1px solid rgba(76,175,135,0.2);
+animation: fadeSlideUp 0.6s ease both;
+}
+.hero-badge::before { content: ‘✦’; font-size: 0.7rem; }
+h1 {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2.4rem, 5vw, 3.8rem);
+font-weight: 700; line-height: 1.15; margin-bottom: 1.2rem;
+animation: fadeSlideUp 0.6s ease 0.1s both;
+}
+h1 em {
+font-style: normal;
+background: linear-gradient(135deg, var(–mint), var(–teal));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-desc {
+font-size: 1.05rem; color: var(–text-mid); line-height: 1.7;
+margin-bottom: 2rem; font-weight: 300;
+animation: fadeSlideUp 0.6s ease 0.2s both;
+}
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeSlideUp 0.6s ease 0.3s both; }
+.btn-primary {
+background: linear-gradient(135deg, var(–mint), var(–teal));
+color: white; border: none; padding: 0.85rem 2rem; border-radius: 50px;
+font-size: 1rem; font-weight: 600; cursor: pointer;
+font-family: ‘DM Sans’, sans-serif; transition: all 0.25s;
+box-shadow: 0 4px 20px rgba(76,175,135,0.25);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(76,175,135,0.35); }
+.btn-secondary {
+background: white; color: var(–text-dark); border: 1.5px solid var(–border);
+padding: 0.85rem 2rem; border-radius: 50px; font-size: 1rem;
+font-weight: 500; cursor: pointer; font-family: ‘DM Sans’, sans-serif; transition: all 0.25s;
+}
+.btn-secondary:hover { border-color: var(–mint); color: var(–mint); transform: translateY(-2px); }
+.hero-stats { display: flex; gap: 2.5rem; margin-top: 3rem; animation: fadeSlideUp 0.6s ease 0.4s both; }
+.stat-num { font-family: ‘Playfair Display’, serif; font-size: 1.8rem; font-weight: 700; line-height: 1; }
+.stat-num span { color: var(–mint); }
+.stat-label { font-size: 0.78rem; color: var(–text-soft); margin-top: 0.2rem; font-weight: 500; }
+@keyframes fadeSlideUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* FLOATING CARDS */
+.hero-cards {
+position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+z-index: 1; display: flex; flex-direction: column; gap: 1rem;
+animation: fadeSlideUp 0.8s ease 0.5s both;
+}
+.float-card {
+background: white; border-radius: 16px; padding: 1rem 1.3rem;
+box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+display: flex; align-items: center; gap: 0.8rem;
+min-width: 220px; border: 1px solid var(–border); transition: transform 0.3s;
+}
+.float-card:hover { transform: translateX(-4px); }
+.float-card:nth-child(2) { margin-left: 1.5rem; }
+.float-card:nth-child(4) { margin-left: 1rem; }
+.card-icon {
+width: 40px; height: 40px; border-radius: 12px;
+display: flex; align-items: center; justify-content: center;
+font-size: 1.2rem; flex-shrink: 0;
+}
+.ci-green { background: var(–mint-light); }
+.ci-blue { background: var(–sky-light); }
+.ci-teal { background: var(–teal-light); }
+.ci-bej { background: var(–bej); }
+.card-title { font-size: 0.82rem; font-weight: 600; }
+.card-sub { font-size: 0.74rem; color: var(–text-soft); }
+
+/* SECTIONS */
+section { padding: 90px 5%; }
+.section-tag {
+display: inline-block; background: var(–mint-light); color: var(–mint);
+padding: 0.3rem 0.9rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;
+}
+.section-title {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+font-weight: 700; line-height: 1.2; margin-bottom: 0.8rem;
+}
+.section-desc { color: var(–text-mid); font-size: 1rem; line-height: 1.7; max-width: 520px; font-weight: 300; }
+
+/* MODULES SECTION */
+.modules { background: white; }
+.modules-header { text-align: center; margin-bottom: 3.5rem; }
+.modules-header .section-desc { margin: 0 auto; }
+.modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+.module-card {
+border-radius: 20px; padding: 2rem; border: 1.5px solid var(–border);
+transition: all 0.3s; position: relative; overflow: hidden; cursor: pointer;
+}
+.module-card::before {
+content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 20px 20px 0 0;
+}
+.mc-green { background: var(–mint-light); }
+.mc-green::before { background: linear-gradient(90deg, var(–mint), var(–teal)); }
+.mc-blue { background: var(–sky-light); }
+.mc-blue::before { background: linear-gradient(90deg, var(–sky), var(–teal)); }
+.mc-teal { background: var(–teal-light); }
+.mc-teal::before { background: linear-gradient(90deg, var(–teal), var(–mint)); }
+.mc-bej { background: var(–bej); }
+.mc-bej::before { background: linear-gradient(90deg, #C9A96E, #E8C989); }
+.module-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+.module-icon { font-size: 2rem; margin-bottom: 1rem; }
+.module-name { font-family: ‘Playfair Display’, serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.module-desc { font-size: 0.88rem; color: var(–text-mid); line-height: 1.6; }
+.module-tag {
+display: inline-block; margin-top: 1rem; font-size: 0.74rem; font-weight: 600;
+padding: 0.25rem 0.7rem; border-radius: 50px; background: white; color: var(–text-mid);
+}
+
+/* DEMO SECTION */
+.demo-section { background: var(–cream); display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.chat-demo {
+background: white; border-radius: 24px; padding: 1.5rem;
+box-shadow: 0 8px 40px rgba(0,0,0,0.08); border: 1px solid var(–border);
+}
+.chat-header { display: flex; align-items: center; gap: 0.8rem; padding-bottom: 1rem; border-bottom: 1px solid var(–border); margin-bottom: 1.2rem; }
+.chat-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(–mint), var(–teal)); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.chat-name { font-weight: 600; font-size: 0.9rem; }
+.chat-status { font-size: 0.75rem; color: var(–mint); }
+.chat-messages { display: flex; flex-direction: column; gap: 0.8rem; }
+.msg { padding: 0.8rem 1rem; border-radius: 16px; font-size: 0.85rem; line-height: 1.5; max-width: 85%; }
+.msg-user { background: linear-gradient(135deg, var(–mint), var(–teal)); color: white; align-self: flex-end; border-radius: 16px 16px 4px 16px; }
+.msg-ai { background: var(–cream); color: var(–text-dark); align-self: flex-start; border-radius: 16px 16px 16px 4px; border: 1px solid var(–border); }
+.msg-typing { background: var(–cream); align-self: flex-start; border-radius: 16px 16px 16px 4px; border: 1px solid var(–border); padding: 0.8rem 1.2rem; display: flex; gap: 0.3rem; align-items: center; }
+.chat-input-demo { display: flex; gap: 0.5rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(–border); }
+.chat-input-demo input { flex: 1; border: 1.5px solid var(–border); border-radius: 50px; padding: 0.6rem 1rem; font-size: 0.85rem; outline: none; font-family: ‘DM Sans’, sans-serif; background: var(–cream); }
+.chat-send { background: var(–mint); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.chat-send:hover { background: var(–teal); transform: scale(1.05); }
+
+/* PRICING */
+.pricing { background: white; }
+.pricing-header { text-align: center; margin-bottom: 3rem; }
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 800px; margin: 0 auto; }
+.price-card { border-radius: 24px; padding: 2.5rem; border: 2px solid var(–border); transition: all 0.3s; }
+.price-card.featured { background: linear-gradient(145deg, var(–text-dark) 0%, #2A3F5F 100%); border-color: transparent; color: white; }
+.price-card:not(.featured) { background: var(–cream); }
+.price-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
+.price-plan { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; opacity: 0.7; }
+.price-amount { font-family: ‘Playfair Display’, serif; font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 0.3rem; }
+.price-period { font-size: 0.85rem; opacity: 0.6; margin-bottom: 1.5rem; }
+.price-features { list-style: none; margin-bottom: 2rem; }
+.price-features li { display: flex; align-items: center; gap: 0.6rem; font-size: 0.88rem; padding: 0.4rem 0; opacity: 0.85; }
+.price-features li::before { content: ‘✓’; color: var(–mint); font-weight: 700; }
+.price-card.featured .price-features li::before { color: #7DDFB8; }
+.price-btn { width: 100%; padding: 0.85rem; border-radius: 50px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: ‘DM Sans’, sans-serif; transition: all 0.25s; border: none; }
+.price-btn-outline { background: white; color: var(–text-dark); border: 2px solid var(–border); }
+.price-btn-outline:hover { border-color: var(–mint); color: var(–mint); }
+.price-btn-filled { background: linear-gradient(135deg, var(–mint), var(–teal)); color: white; }
+.price-btn-filled:hover { box-shadow: 0 6px 20px rgba(76,175,135,0.4); transform: translateY(-1px); }
+
+/* FOOTER */
+footer { background: var(–text-dark); color: white; padding: 3rem 5% 2rem; text-align: center; }
+.footer-logo { font-family: ‘Playfair Display’, serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+.footer-logo span { color: var(–mint); }
+.footer-desc { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 1.5rem; }
+.footer-note { color: rgba(255,255,255,0.3); font-size: 0.75rem; }
+.disclaimer { background: #FFF8E8; border: 1px solid #F0D080; border-radius: 12px; padding: 0.8rem 1.2rem; font-size: 0.78rem; color: #8A6914; margin-top: 1rem; display: flex; gap: 0.5rem; align-items: flex-start; }
+
+@media (max-width: 900px) {
+.hero-cards { display: none; }
+.demo-section { grid-template-columns: 1fr; }
+.pricing-grid { grid-template-columns: 1fr; }
+.hero-stats { gap: 1.5rem; }
+.nav-links { display: none; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- ── SETUP OVERLAY ── -->
+
+<div class="setup-overlay" id="setupOverlay">
+  <div class="setup-box" style="position:relative">
+    <button class="setup-close" onclick="closeSetup()">✕</button>
+    <div class="setup-icon">🔑</div>
+    <h2 class="setup-title">API Key Gir</h2>
+    <p class="setup-desc">Groq API key'ini gir, ŞİFAİ'yi kullanmaya başla.<br>Key sadece tarayıcında saklanır.</p>
+    <input type="password" class="setup-input" id="apiKeyInput" placeholder="gsk_..." onkeydown="if(event.key==='Enter')connectAPI()">
+    <button class="setup-btn" onclick="connectAPI()">Bağlan →</button>
+    <p class="setup-note">Key yok mu? <a href="https://console.groq.com" target="_blank">console.groq.com</a>'dan ücretsiz al.</p>
+  </div>
+</div>
+
+<!-- ── CHAT OVERLAY ── -->
+
+<div class="chat-overlay" id="chatOverlay">
+  <div class="chat-nav">
+    <div class="chat-nav-left">
+      <button class="back-btn" onclick="closeChat()">← Geri</button>
+      <div class="chat-logo">Şifa<span>İ</span></div>
+    </div>
+    <button class="key-btn" onclick="openSetup()">🔑 Key Değiştir</button>
+  </div>
+  <div class="mod-tabs" id="modTabs"></div>
+  <div class="chat-body">
+    <div class="chat-inner">
+      <div class="disclaimer-bar">⚠️ ŞİFAİ tıbbi teşhis koymaz. Yanıtlar bilgilendirme amaçlıdır, doktor muayenesinin yerini tutmaz.</div>
+      <div class="mod-header">
+        <div class="mod-icon ig" id="modIcon">🩺</div>
+        <div class="mod-info">
+          <h3 id="modName">Semptom Analizi</h3>
+          <p id="modDesc">Belirtilerini yaz, AI halk diliyle açıklasın</p>
+        </div>
+      </div>
+      <div class="quick-prompts" id="quickPrompts"></div>
+      <div class="messages" id="messages"></div>
+    </div>
+  </div>
+  <div class="chat-input-bar">
+    <div class="input-wrap">
+      <textarea class="input-box" id="inputBox" placeholder="Mesajını yaz..." rows="1"
+        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+
+<nav>
+  <div class="logo" onclick="scrollToTop()">Şifa<span>İ</span></div>
+  <ul class="nav-links">
+    <li><a href="#features">Özellikler</a></li>
+    <li><a href="#how">Nasıl Çalışır</a></li>
+    <li><a href="#pricing">Fiyatlandırma</a></li>
+  </ul>
+  <button class="nav-cta" onclick="openChat()">Ücretsiz Başla</button>
+</nav>
+
+<!-- ── HERO ── -->
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-blob"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Türkiye'nin İlk Sağlık AI Platformu</div>
+    <h1>Sağlığın <em>Akıllı</em><br>Dostu</h1>
+    <p class="hero-desc">Semptomlarından beslenme planına, ilaç bilgisinden hastane yönlendirmesine — ŞİFAİ yapay zeka ile sağlığını her an yanında taşı.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="openChat()">Hemen Başla — Ücretsiz</button>
+      <button class="btn-secondary" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Nasıl Çalışır? →</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num">6<span>+</span></div><div class="stat-label">Sağlık Modülü</div></div>
+      <div class="stat-item"><div class="stat-num">7/24</div><div class="stat-label">Erişim</div></div>
+      <div class="stat-item"><div class="stat-num">%100</div><div class="stat-label">Türkçe</div></div>
+    </div>
+  </div>
+  <div class="hero-cards">
+    <div class="float-card"><div class="card-icon ci-green">🩺</div><div><div class="card-title">Semptom Analizi</div><div class="card-sub">Belirtilerini hemen analiz et</div></div></div>
+    <div class="float-card"><div class="card-icon ci-blue">💊</div><div><div class="card-title">İlaç Bilgisi</div><div class="card-sub">Türkiye ilaçları & SGK kapsamı</div></div></div>
+    <div class="float-card"><div class="card-icon ci-teal">🥗</div><div><div class="card-title">Diyetisyen AI</div><div class="card-sub">Türk mutfağına özel plan</div></div></div>
+    <div class="float-card"><div class="card-icon ci-bej">🏥</div><div><div class="card-title">Hastane Yönlendirme</div><div class="card-sub">Doğru uzmana yönlen</div></div></div>
+  </div>
+</section>
+
+<!-- ── MODULES ── -->
+
+<section class="modules" id="features">
+  <div class="modules-header">
+    <div class="section-tag">6 Modül</div>
+    <h2 class="section-title">Her Sağlık İhtiyacın<br>Tek Platformda</h2>
+    <p class="section-desc">Yapay zeka destekli 6 farklı modül ile sağlığının her alanında yanındayız.</p>
+  </div>
+  <div class="modules-grid">
+    <div class="module-card mc-green" onclick="openChat(0)"><div class="module-icon">🩺</div><div class="module-name">Semptom Analizi</div><div class="module-desc">Belirtilerini yaz, AI olası durumları açıklasın. Halk diliyle, anlaşılır şekilde.</div><span class="module-tag">Ücretsiz: Günde 3 sorgu</span></div>
+    <div class="module-card mc-blue" onclick="openChat(1)"><div class="module-icon">💊</div><div class="module-name">İlaç Bilgi Sistemi</div><div class="module-desc">Türkiye'de satılan ilaçlar, yan etkiler, muadil önerileri ve SGK kapsamı.</div><span class="module-tag">Ücretsiz</span></div>
+    <div class="module-card mc-teal" onclick="openChat(2)"><div class="module-icon">🧘</div><div class="module-name">Kişisel Sağlık Koçu</div><div class="module-desc">Yaşına, kilona ve aktivitene göre kişisel sağlık takibi ve öneriler.</div><span class="module-tag">Premium</span></div>
+    <div class="module-card mc-bej" onclick="openChat(3)"><div class="module-icon">😴</div><div class="module-name">Uyku & Stres Takibi</div><div class="module-desc">Günlük ruh hali ve uyku verilerini gir, AI analiz etsin ve çözüm önersin.</div><span class="module-tag">Ücretsiz: 7 günlük</span></div>
+    <div class="module-card mc-blue" onclick="openChat(4)"><div class="module-icon">🏥</div><div class="module-name">Hastane Yönlendirme</div><div class="module-desc">Şikayetini söyle, hangi uzmana gitmen gerektiğini ve SGK kapsamını öğren.</div><span class="module-tag">Ücretsiz</span></div>
+    <div class="module-card mc-green" onclick="openChat(5)"><div class="module-icon">🥗</div><div class="module-name">Diyetisyen AI</div><div class="module-desc">Türk mutfağına özel beslenme planları. Mercimek çorbasından zeytinyağlılara.</div><span class="module-tag">Ücretsiz: Haftalık plan</span></div>
+  </div>
+</section>
+
+<!-- ── DEMO ── -->
+
+<section class="demo-section" id="how">
+  <div>
+    <div class="section-tag">Canlı Demo</div>
+    <h2 class="section-title">Nasıl<br>Çalışır?</h2>
+    <p class="section-desc">Türkçe yaz, anında yanıt al. Karmaşık tıbbi terimler yok — komşunla konuşur gibi sade ve anlaşılır.</p>
+    <div class="disclaimer">⚠️ ŞİFAİ tıbbi teşhis koymaz. Yanıtlar bilgilendirme amaçlıdır, doktor muayenesinin yerini tutmaz.</div>
+    <br>
+    <button class="btn-primary" onclick="openChat()">Hemen Dene →</button>
+  </div>
+  <div class="chat-demo">
+    <div class="chat-header">
+      <div class="chat-avatar">🤖</div>
+      <div><div class="chat-name">ŞİFAİ Asistan</div><div class="chat-status">● Çevrimiçi</div></div>
+    </div>
+    <div class="chat-messages">
+      <div class="msg msg-user">Baş ağrım var ve gözlerim yanıyor, ne yapmalıyım?</div>
+      <div class="msg msg-ai">Bu belirtiler genellikle <strong>göz yorgunluğu veya gerilim tipi baş ağrısı</strong> ile ilişkili olabilir. Ekran başında uzun süre vakit geçiriyor musun? 💙</div>
+      <div class="msg msg-user">Evet, bugün 8 saat bilgisayar karşısındaydım</div>
+      <div class="msg-typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+    <div class="chat-input-demo">
+      <input type="text" placeholder="Belirtilerini yaz...">
+      <button class="chat-send" onclick="openChat()">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+
+<section class="pricing" id="pricing">
+  <div class="pricing-header">
+    <div class="section-tag">Fiyatlandırma</div>
+    <h2 class="section-title">Sağlık Herkese Açık</h2>
+    <p class="section-desc" style="margin:0 auto">Temel özellikler tamamen ücretsiz. Daha fazlası için Premium.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-plan">ÜCRETSIZ</div>
+      <div class="price-amount">₺0</div>
+      <div class="price-period">sonsuza kadar ücretsiz</div>
+      <ul class="price-features">
+        <li>Günde 3 semptom analizi</li>
+        <li>Sınırsız ilaç bilgisi</li>
+        <li>Hastane yönlendirme</li>
+        <li>7 günlük uyku takibi</li>
+        <li>Haftalık beslenme planı</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="openChat()">Ücretsiz Başla</button>
+    </div>
+    <div class="price-card featured">
+      <div class="price-plan">PREMİUM</div>
+      <div class="price-amount">₺99</div>
+      <div class="price-period">aylık</div>
+      <ul class="price-features">
+        <li>Sınırsız semptom analizi</li>
+        <li>Kişisel sağlık koçu</li>
+        <li>Günlük beslenme planı + takip</li>
+        <li>Aylık sağlık raporu</li>
+        <li>Geçmiş kayıtlar</li>
+        <li>Öncelikli destek</li>
+      </ul>
+      <button class="price-btn price-btn-filled" onclick="openChat()">Premium'a Geç</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+
+<footer>
+  <div class="footer-logo">Şifa<span>İ</span></div>
+  <div class="footer-desc">Sağlığın Akıllı Dostu — Türkiye'nin AI Sağlık Platformu</div>
+  <div class="footer-note">© 2025 ŞİFAİ · Tüm hakları saklıdır · Bu platform tıbbi teşhis koymaz</div>
+</footer>
+
+<script>
+const GROQ_MODEL = "llama-3.3-70b-versatile";
+const GROQ_URL   = "https://api.groq.com/openai/v1/chat/completions";
+
+const MODULES = [
+  { name:"Semptom Analizi", emoji:"🩺", ic:"ig", desc:"Belirtilerini yaz, AI halk diliyle açıklasın", ph:"Örn: Başım ağrıyor ve ateşim var...", quick:["Baş ağrısı var","Mide bulantısı","Yorgunluk ve halsizlik","Öksürük ve boğaz ağrısı"], welcome:"Belirtilerini yaz, sana yardımcı olayım. Karmaşık tıbbi terimler yok — sade ve anlaşılır şekilde açıklıyorum.", system:`Sen ŞİFAİ'nin Semptom Analizi asistanısın. Türk kullanıcılara sağlık konularında Türkçe yardım et. Halk diliyle konuş, kesin teşhis koyma. Acil durumlarda 112'yi söyle. Emoji kullan. Kısa ve öz yanıt ver.` },
+  { name:"İlaç Bilgi Sistemi", emoji:"💊", ic:"ib", desc:"Türkiye ilaçları, SGK kapsamı ve muadil önerileri", ph:"Örn: Majezik ne işe yarar?", quick:["Majezik ne işe yarar?","Augmentin yan etkileri","SGK karşılıyor mu?","Muadil ilaç var mı?"], welcome:"İlaç adını yaz, ne işe yaradığını, yan etkilerini ve SGK kapsamını öğren.", system:`Sen ŞİFAİ'nin İlaç Bilgi asistanısın. Türkiye ilaçları hakkında bilgi ver. Yan etkiler, SGK kapsamı, muadil ilaçlar. Reçete gerekliliğini belirt. Emoji kullan.` },
+  { name:"Sağlık Koçu", emoji:"🧘", ic:"it", desc:"Kişisel sağlık takibi ve yaşam tarzı önerileri", ph:"Örn: 30 yaşındayım, 80 kg. Daha sağlıklı yaşamak istiyorum.", quick:["Günlük su ne kadar?","Egzersiz önerisi","Bağışıklık güçlendirme","Kilo verme"], welcome:"Yaşın, kilonu ve hedeflerini paylaş — sana özel sağlık önerileri hazırlayayım.", system:`Sen ŞİFAİ'nin Sağlık Koçusun. Türkiye yaşam koşullarına uygun, kişiselleştirilmiş sağlık önerileri ver. Motive edici ve pozitif ol.` },
+  { name:"Uyku & Stres", emoji:"😴", ic:"ibj", desc:"Uyku kalitesi ve stres yönetimi analizi", ph:"Örn: Son hafta çok stresli hissediyorum.", quick:["Uyuyamıyorum","Stres azaltma","Uyku düzeni","Kaygı ile başa çıkma"], welcome:"Uyku düzenin ve stres seviyeni anlat, birlikte çözüm bulalım.", system:`Sen ŞİFAİ'nin Uyku ve Stres asistanısın. Empatiyle yanıt ver. Pratik teknikler öner. Ciddi durumlarda uzmana yönlendir.` },
+  { name:"Hastane Yönlendirme", emoji:"🏥", ic:"ib", desc:"Hangi uzmana gideceğini ve SGK kapsamını öğren", ph:"Örn: Dizim çok ağrıyor, hangi doktora gideyim?", quick:["Hangi doktora gideyim?","SGK kapsamı","MHRS randevu","Acil mi?"], welcome:"Şikayetini söyle, hangi uzmana gideceğini ve nasıl randevu alacağını anlatalım.", system:`Sen ŞİFAİ'nin Hastane Yönlendirme asistanısın. Türkiye sağlık sistemi: SGK, MHRS, aile hekimi, e-Nabız hakkında bilgi ver. Acilde 112 söyle.` },
+  { name:"Diyetisyen AI", emoji:"🥗", ic:"ig", desc:"Türk mutfağına özel kişisel beslenme planları", ph:"Örn: Kilo vermek istiyorum, Türk yemeklerini seviyorum.", quick:["Haftalık plan yap","Türk mutfağında diyet","Ramazan'da beslenme","Sağlıklı kahvaltı"], welcome:"Beslenme alışkanlıklarını paylaş, Türk mutfağına özel beslenme planı hazırlayayım. 🥗", system:`Sen ŞİFAİ'nin Diyetisyen asistanısın. Türk yemeklerini ön plana çıkar. Ekonomik ve pratik öneriler ver. Kronik hastalıklarda uzmana yönlendir.` }
+];
+
+let apiKey = "";
+let currentMod = 0;
+let convos = MODULES.map(() => []);
+let loading = false;
+
+// ── OVERLAY CONTROLS ──────────────────────────────────
+function openChat(modIdx = 0) {
+  if (!apiKey) {
+    pendingMod = modIdx;
+    openSetup();
+    return;
+  }
+  switchMod(modIdx);
+  document.getElementById("chatOverlay").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeChat() {
+  document.getElementById("chatOverlay").classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+let pendingMod = 0;
+function openSetup() { document.getElementById("setupOverlay").classList.add("active"); }
+function closeSetup() { document.getElementById("setupOverlay").classList.remove("active"); }
+
+function connectAPI() {
+  const k = document.getElementById("apiKeyInput").value.trim();
+  if (!k || !k.startsWith("gsk_")) { alert("Geçerli bir Groq key gir (gsk_ ile başlamalı)"); return; }
+  apiKey = k;
+  localStorage.setItem("shifai_key", k);
+  closeSetup();
+  openChat(pendingMod);
+}
+
+function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+// Auto-login
+window.onload = () => {
+  const saved = localStorage.getItem("shifai_key");
+  if (saved) apiKey = saved;
+  buildTabs();
+};
+
+// ── TABS ──────────────────────────────────────────────
+function buildTabs() {
+  document.getElementById("modTabs").innerHTML = MODULES.map((m,i) =>
+    `<button class="mtab${i===0?' active':''}" onclick="switchMod(${i})">${m.emoji} ${m.name}</button>`
+  ).join("");
+}
+
+function switchMod(i) {
+  currentMod = i;
+  document.querySelectorAll(".mtab").forEach((t,j) => t.classList.toggle("active", i===j));
+  const m = MODULES[i];
+  document.getElementById("modIcon").textContent = m.emoji;
+  document.getElementById("modIcon").className = "mod-icon " + m.ic;
+  document.getElementById("modName").textContent = m.name;
+  document.getElementById("modDesc").textContent = m.desc;
+  document.getElementById("inputBox").placeholder = m.ph;
+  document.getElementById("quickPrompts").innerHTML =
+    m.quick.map(q => `<button class="qbtn" onclick="useQuick('${q}')">${q}</button>`).join("");
+  renderMsgs();
+}
+
+// ── MESSAGES ──────────────────────────────────────────
+function renderMsgs() {
+  const msgs = convos[currentMod];
+  const el = document.getElementById("messages");
+  if (msgs.length === 0) {
+    const m = MODULES[currentMod];
+    el.innerHTML = `<div class="welcome-box"><div class="welcome-emoji">${m.emoji}</div><h3 class="welcome-title">${m.name}</h3><p class="welcome-desc">${m.welcome}</p></div>`;
+    return;
+  }
+  el.innerHTML = msgs.map(msg => `
+    <div class="msg-wrap ${msg.role}">
+      <div class="msg-bubble ${msg.role}">${fmt(msg.content)}</div>
+      <div class="msg-time">${msg.time}</div>
+    </div>`).join("");
+  setTimeout(() => { el.scrollTop = el.scrollHeight; }, 50);
+}
+
+function fmt(t) {
+  return t.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\*(.*?)\*/g,"<em>$1</em>").replace(/\n/g,"<br>");
+}
+
+function useQuick(q) { document.getElementById("inputBox").value = q; sendMessage(); }
+function handleKey(e) { if (e.key==="Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+function autoResize(el) { el.style.height="auto"; el.style.height=Math.min(el.scrollHeight,110)+"px"; }
+
+// ── SEND ──────────────────────────────────────────────
+async function sendMessage() {
+  if (loading) return;
+  const box = document.getElementById("inputBox");
+  const text = box.value.trim();
+  if (!text) return;
+
+  box.value=""; box.style.height="auto";
+  loading=true; document.getElementById("sendBtn").disabled=true;
+
+  const now = new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
+  convos[currentMod].push({ role:"user", content:text, time:now });
+  renderMsgs();
+
+  const msgEl = document.getElementById("messages");
+  const typing = document.createElement("div");
+  typing.className="typing-wrap"; typing.id="typing";
+  typing.innerHTML=`<div class="typing-bubble"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  msgEl.appendChild(typing);
+  msgEl.scrollTop = msgEl.scrollHeight;
+
+  try {
+    const m = MODULES[currentMod];
+    const history = convos[currentMod].map(msg=>({ role: msg.role==="ai"?"assistant":"user", content: msg.content }));
+    const res = await fetch(GROQ_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Authorization":`Bearer ${apiKey}` },
+      body: JSON.stringify({ model:GROQ_MODEL, messages:[{role:"system",content:m.system},...history], max_tokens:1024, temperature:0.7 })
+    });
+    if (!res.ok) { const e=await res.json(); throw new Error(e.error?.message||`HTTP ${res.status}`); }
+    const data = await res.json();
+    const reply = data.choices[0].message.content;
+    document.getElementById("typing")?.remove();
+    convos[currentMod].push({ role:"ai", content:reply, time:now });
+    renderMsgs();
+  } catch(err) {
+    document.getElementById("typing")?.remove();
+    const errEl = document.createElement("div");
+    errEl.className="msg-wrap ai";
+    errEl.innerHTML=`<div class="error-bubble">⚠️ Hata: ${err.message}<br><small>API key'ini kontrol et veya yenile.</small></div>`;
+    document.getElementById("messages").appendChild(errEl);
+  }
+
+  loading=false; document.getElementById("sendBtn").disabled=false;
+  document.getElementById("inputBox").focus();
+}
+</script>
+
+</body>
+</html>
